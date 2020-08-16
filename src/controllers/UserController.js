@@ -1,37 +1,27 @@
 import User from '../models/User';
 
-export default {
+class UserController {
   async store(req, res) {
-    const { 
-      nome, 
-      email, 
-      cep, 
-      coordenada, 
-      cidade, 
-      bairro,
-      rua,
-      numero,
-      complemento,
-      telefone,
-      status,
-      privilegios,
-    } = req.body;
 
-    const user = await User.create({
-      nome: nome,
-      email: email,
-      cep: cep,
-      coordenada: coordenada,
-      cidade: cidade,
-      bairro: bairro,
-      rua: rua,
-      numero: numero,
-      complemento: complemento,
-      telefone: telefone,
-      status: status,
-      privilegios: privilegios
+    //checa se ja existe o email cadastrado
+    const userExists = await User.findOne({email: req.body.email});
+
+    if (userExists) {
+      return res.status(400).json({ error: 'E-mail já cadastrado'});
+    }
+
+    //passa todo o body pois o model ja define os campos a serem usados
+    //++caso adicione um campo extra não sera cadastrado
+    //--caso não coloque um campo este não sera cadastrado
+    const { id, nome, email, privilegios } = await User.create(req.body);
+
+    return res.json({
+      id,
+      nome,
+      email,
+      privilegios
     });
-
-    return res.json(user);
   }
-}
+};
+
+export default new UserController;

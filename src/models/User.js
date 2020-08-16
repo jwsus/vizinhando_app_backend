@@ -9,6 +9,10 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
+  senha: {
+    type: String,
+    required: true
+  },
   cep: {
     type: String
   },
