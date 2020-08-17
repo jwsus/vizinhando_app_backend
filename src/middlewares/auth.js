@@ -21,6 +21,8 @@ export default async (req, res, next) => {
     //extraindo o que tinha sido passado no payload do token, nesse caso o "id"
     const decoded = await promisify(jwt.verify)(token, authConfig.secret);
 
+    //retorna o id do usuario na req, facilitando na hora de editar por exemplo
+    //ja que não será preciso informar o id posteriormente
     req.userId = decoded.id;
 
     return next();
