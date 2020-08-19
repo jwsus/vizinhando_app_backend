@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 
 const UserSchema = new Schema({
-  nome: {
+  name: {
     type: String,
     required: true
   },
@@ -9,37 +9,43 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  senha: {
+  password: {
     type: String,
     required: true
   },
-  cep: {
+  zip_code: {
     type: String
   },
-  cordenada: {
+  latitude: {
+    type: Number
+  },
+  longitude: {
+    type: Number
+  },
+  city: {
     type: String,
   },
-  cidade: {
+  neighborhod: {
     type: String,
   },
-  bairro: {
+  street: {
     type: String,
   },
-  rua: {
-    type: String,
-  },
-  numero: {
-    type: String,
+  number: {
+    type: Number,
   },
   telefone: {
     type: String,
   },
-  status: {
+  complement: {
     type: String,
   },
-  privilegios: {
+  phone: {
     type: String,
   },
+  role: {
+    type: String
+  }
 },{
   timeStamps: true,
 });

@@ -10,7 +10,7 @@ class App{
     this.server = express();
 
 
-    mongoose.connect('mongodb+srv://kleber:kleber@cluster0.moq2t.mongodb.net/VIZINHANDOBD?retryWrites=true&w=majority',{ 
+    mongoose.connect('mongodb+srv://adm:adm@cluster0.leltn.mongodb.net/<dbname>?retryWrites=true&w=majority',{ 
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
