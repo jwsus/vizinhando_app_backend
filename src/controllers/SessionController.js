@@ -12,11 +12,11 @@ class SessionController {
     const pass = await User.findOne({ password });
 
     if (!user) {
-      return res.status(401).json({ error: 'Usuário não encontrado'});
+      return res.status(401).json();
     }
 
     if (!pass) {
-      return res.status(401).json({ error: 'Senha não bate'});
+      return res.status(401).json();
     }
 
     const { id, name} = user;

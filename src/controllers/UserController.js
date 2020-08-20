@@ -6,51 +6,58 @@ class UserController {
     //checa se ja existe o email cadastrado
     const userExists = await User.findOne({email: req.body.email});
 
+    const emailExists = req.body.email;
+
+    if (!emailExists) {
+      return res.status(400).json({ error: "Campos obrigatórios não preenchidos"});
+    }
+
     if (userExists) {
-      return res.status(400).json({ error: 'E-mail já cadastrado'});
+      return res.status(409).json();
     }
 
     const userModel = new User(req.body).validateSync();
 
     if (userModel) {
-      return res.status(500).json({ error: "Campos obrigatórios não preenchidos"})
+      return res.status(400).json({ error: "Campos obrigatórios não preenchidos"});
     }
 
     const { id, nome, email, privilegios } = await User.create(req.body);
 
-    return res.json({
-      id,
-      nome,
-      email,
-      privilegios
-    });
+    return res.status(201).json();
+  }
+
+  async show(req, res) {
+    const user = await User.findById(req.userId);
+
+    //caso esteja logado com o token de um user excluído
+    if (!user) {
+      return res.status(401).json();
+    } 
+
+    return res.json({user});
   }
 
   async update(req, res) {
-    const { email, password } = req.body;
+    const { email } = req.body;
+
+    const userModel = new User(req.body).validateSync();
+
+    delete req.body.email;
+
+    if (userModel) {
+      return res.status(400).json({ error: "Campos obrigatórios não preenchidos"})
+    }
 
     const user = await User.findById(req.userId);
 
     //caso esteja logado com o token de um user excluído
     if (!user) {
-      return res.status(404).json({ error: 'Usuário não encontrado'});
+      return res.status(401).json();
     }
 
-    //caso Oldpass esteja preenchido compara com a senha antiga
-    // if (oldPassword) {
-    //   if (oldPassword !== user.senha) {
-    //     return res.status(401).json({ error: 'Senhas não batem'});
-    //   }
-    // }
-    
-    //caso o email esteja sendo alterado
-    //checa se ja nao existe outro user com o mesmo email
     if (email !== user.email) {
-      const userExists = await User.findOne({ email });
-
-      if (userExists) {
-        return res.status(400).json({ error: 'E-mail ja cadastrado, ímpossivel alterar'});
-      }
+      return res.status(401).json();
     }
 
     try {
@@ -59,7 +66,7 @@ class UserController {
       res.status(500).send(err)
     }
 
-    return res.json({id: req.userId});
+    return res.status(200).json();
   };
 
   async delete(req, res) {
