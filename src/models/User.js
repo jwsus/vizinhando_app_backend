@@ -14,34 +14,39 @@ const UserSchema = new Schema({
     required: true
   },
   zip_code: {
-    type: String
+    type: String,
+    required: true
   },
   latitude: {
-    type: Number
+    type: Number,
+    required: true
   },
   longitude: {
-    type: Number
+    type: Number,
+    required: true
   },
   city: {
     type: String,
+    required: true
   },
-  neighborhod: {
+  neighborhood: {
     type: String,
+    required: true
   },
   street: {
     type: String,
+    required: true
   },
   number: {
     type: Number,
-  },
-  telefone: {
-    type: String,
+    required: true
   },
   complement: {
-    type: String,
+    type: String
   },
   phone: {
     type: String,
+    required: true
   },
   role: {
     type: String

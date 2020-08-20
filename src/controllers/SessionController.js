@@ -5,11 +5,11 @@ import User from '../models/User';
 
 class SessionController {
   async store(req, res) {
-    const { email, senha } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email });
 
-    const pass = await User.findOne({ senha });
+    const pass = await User.findOne({ password });
 
     if (!user) {
       return res.status(401).json({ error: 'Usuário não encontrado'});
@@ -19,14 +19,14 @@ class SessionController {
       return res.status(401).json({ error: 'Senha não bate'});
     }
 
-    const { id, nome} = user;
+    const { id, name} = user;
 
     return res.json({
-      user: {
-        id,
-        nome,
-        email
-      },
+      // user: {
+      //   _id,
+      //   name,
+      //   email
+      // },
       //1 parametro payload, 2 hash, 3 expiração
       token: jwt.sign({ id }, authConfig.secret, {
         expiresIn: authConfig.expiresIn, 

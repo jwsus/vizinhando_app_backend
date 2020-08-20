@@ -10,9 +10,12 @@ class UserController {
       return res.status(400).json({ error: 'E-mail já cadastrado'});
     }
 
-    //passa todo o body pois o model ja define os campos a serem usados
-    //++caso adicione um campo extra não sera cadastrado
-    //--caso não coloque um campo este não sera cadastrado
+    const userModel = new User(req.body).validateSync();
+
+    if (userModel) {
+      return res.status(500).json({ error: "Campos obrigatórios não preenchidos"})
+    }
+
     const { id, nome, email, privilegios } = await User.create(req.body);
 
     return res.json({
@@ -24,7 +27,7 @@ class UserController {
   }
 
   async update(req, res) {
-    const { email, oldPassword } = req.body;
+    const { email, password } = req.body;
 
     const user = await User.findById(req.userId);
 
@@ -34,11 +37,11 @@ class UserController {
     }
 
     //caso Oldpass esteja preenchido compara com a senha antiga
-    if (oldPassword) {
-      if (oldPassword !== user.senha) {
-        return res.status(401).json({ error: 'Senhas não batem'});
-      }
-    }
+    // if (oldPassword) {
+    //   if (oldPassword !== user.senha) {
+    //     return res.status(401).json({ error: 'Senhas não batem'});
+    //   }
+    // }
     
     //caso o email esteja sendo alterado
     //checa se ja nao existe outro user com o mesmo email
