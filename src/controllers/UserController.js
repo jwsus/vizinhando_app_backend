@@ -35,7 +35,7 @@ class UserController {
       return res.status(401).json();
     } 
 
-    return res.json({user});
+    return res.json(user);
   }
 
   async update(req, res) {
