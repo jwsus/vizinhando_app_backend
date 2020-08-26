@@ -6,11 +6,10 @@ import authConfig from '../config/auth';
 export default async (req, res, next) => {
   //token é passado junto ao header na variavel authorization
   const authHeader = req.headers['Authorization'] || req.headers['authorization'];
-
+  
   if (!authHeader) {
     return res.status(401).json()
   };
-
   //o retorno do token é bearer token
   //desse modo separamos a string pelo espaço e pegamos apenas o token
   // const [, token] = authHeader.split(' ');
@@ -23,8 +22,8 @@ export default async (req, res, next) => {
 
     //retorna o id do usuario na req, facilitando na hora de editar por exemplo
     //ja que não será preciso informar o id posteriormente
-    req.userId = decoded.id;
-
+    req.userId = decoded._id;
+    
     return next();
 
   } catch (error) {
