@@ -50,15 +50,16 @@ class UserController {
     }
 
     const user = await User.findById(req.userId);
+    console.log(req.userId);
 
     //caso esteja logado com o token de um user excluído
     if (!user) {
       return res.status(401).json();
     }
 
-    if (email !== user.email) {
-      return res.status(401).json();
-    }
+    // if (email !== user.email) {
+    //   return res.status(401).json();
+    // }
 
     try {
       await user.updateOne(req.body);
