@@ -9,7 +9,7 @@ import authMiddleware from './middlewares/auth';
 const routes = new Router();
 
 
-routes.get('/forgotPassword', PasswordController.store);
+// routes.get('/forgotPassword', PasswordController.store);
 routes.post('/user', UserController.store);
 routes.post('/login', SessionController.store);
 
