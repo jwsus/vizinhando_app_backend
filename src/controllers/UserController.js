@@ -30,8 +30,8 @@ class UserController {
   }
 
   async show(req, res) {
-    // const user = await User.findOne({id:req.user_Id}, {password:0, __v:0});
-    const user = await User.findById(req.userId);
+    const user = await User.findOne({_id:req.userId}, {password:0, __v:0});
+    // const user = await User.findById(req.userId);
 
     //caso esteja logado com o token de um user excluído
     if (!user) {
