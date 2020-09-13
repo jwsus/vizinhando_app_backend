@@ -55,7 +55,6 @@ class UserController {
     }
 
     const user = await User.findById(req.userId);
-    console.log(req.userId);
 
     //caso esteja logado com o token de um user excluído
     if (!user) {
