@@ -1,5 +1,7 @@
 import User from '../models/User';
 
+import generator from 'generate-password';
+
 import nodemailer from 'nodemailer';
 
 class PasswordController {
@@ -10,6 +12,21 @@ class PasswordController {
     const userExists = await User.findOne({email: email});
 
     if (userExists){
+
+      const filter = { email: email};
+
+      var newPass = generator.generate({
+        length: 6,
+        numbers: true
+      });
+
+      const update = { password: newPass}
+
+      let doc = await User.findOneAndUpdate(filter, update, {
+        new: true,
+        useFindAndModify: false
+      });
+
       var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -22,7 +39,7 @@ class PasswordController {
         from: 'd.e.v.email.use@gmail.com',
         to: email,
         subject: 'Recuperação de senha',
-        text: userExists.password
+        text: `Sua nova senha é: ${newPass}`
       };
       
       transporter.sendMail(mailOptions, function(error, info){
@@ -35,6 +52,24 @@ class PasswordController {
     }
    
     return res.status(200).json();
+  }
+
+  async update(req, res) {
+
+    const filter = { _id: req.userId};
+
+    var newPass = generator.generate({
+      length: 6,
+      numbers: true
+    });
+
+    const update = { password: newPass}
+
+    let doc = await User.findOneAndUpdate(filter, update, {
+      new: true
+    })
+
+    return;
   }
 }
 

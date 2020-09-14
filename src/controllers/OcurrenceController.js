@@ -1,7 +1,5 @@
 import Ocurrence from '../models/Ocurrence';
 
-import UserController from './UserController';
-
 import User from '../models/User';
 
 class OcurrenceController {
@@ -48,7 +46,6 @@ class OcurrenceController {
     
     req.body.user_id = req.userId;
     // req.body.user_name = req.userName;
-    console.log(req.body.user_name)
 
     const OcurrenceCreate = await Ocurrence.create(req.body);
 
@@ -69,15 +66,17 @@ class OcurrenceController {
 
     for(var key in ocurrenceJson){
       const { name } = await User.findOne({_id: ocurrence[key].user_id});
-      delete ocurrenceJson[key].__v;
+  
       if (ocurrenceJson[key].anonymous == false) {
         ocurrenceJson[key].user_name = name;
       }
 
       if (ocurrenceJson[key].anonymous == true) {
         delete ocurrenceJson[key].user_id;
+        delete ocurrenceJson[key].user_name;
       }
 
+      delete ocurrenceJson[key].__v;
       ocurrenceJson[key].ocurred_at = Date.parse(ocurrenceJson[key].ocurred_at);
     }
 
