@@ -1,5 +1,9 @@
 import Ocurrence from '../models/Ocurrence';
 
+import UserController from './UserController';
+
+import User from '../models/User';
+
 class OcurrenceController {
   async store(req, res) {
    
@@ -43,36 +47,38 @@ class OcurrenceController {
     }
     
     req.body.user_id = req.userId;
+    // req.body.user_name = req.userName;
+    console.log(req.body.user_name)
 
     const OcurrenceCreate = await Ocurrence.create(req.body);
-
-    // console.log(req.userId)
 
     return res.status(200).json();
   }
 
   async show(req, res) {
-    const ocurrence = await Ocurrence.find({user_id: req.userId}, {user_id: 0});
+    const ocurrence = await Ocurrence.find();
+
+    if (!ocurrence) {
+      return res.status(400).json();
+    }
 
     //convertendo model de ocorrencias para JSON 
     // para remover e adicionar campos
     const ocurrenceAux = JSON.stringify(ocurrence);
-
     const ocurrenceJson = JSON.parse(ocurrenceAux);
 
     for(var key in ocurrenceJson){
-
+      const { name } = await User.findOne({_id: ocurrence[key].user_id});
+      delete ocurrenceJson[key].__v;
       if (ocurrenceJson[key].anonymous == false) {
-        ocurrenceJson[key].user_name = req.userName;
-        ocurrenceJson[key].user_id = req.userId;
-        delete ocurrenceJson[key].anonymous;
-        delete ocurrenceJson[key].__v;
+        ocurrenceJson[key].user_name = name;
       }
-      ocurrenceJson[key].ocurred_at = Date.parse(ocurrenceJson[key].ocurred_at);
-    }
 
-    if (!ocurrence) {
-      return res.status(400).json();
+      if (ocurrenceJson[key].anonymous == true) {
+        delete ocurrenceJson[key].user_id;
+      }
+
+      ocurrenceJson[key].ocurred_at = Date.parse(ocurrenceJson[key].ocurred_at);
     }
 
     return res.status(200).json(ocurrenceJson);

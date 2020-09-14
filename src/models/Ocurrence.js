@@ -34,6 +34,9 @@ const OcurrenceSchema = new Schema({
   user_id: {
     type: String
   },
+  // user_name: {
+  //   type: String
+  // },
   ocurred_at: {
     type: Date,
     required: true
