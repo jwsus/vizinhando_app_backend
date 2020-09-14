@@ -42,7 +42,7 @@ class OcurrenceController {
       return res.status(400).json({error: `Campos obrigatórios não preenchidos :${invalidSchema}`});
     }
     
-    // req.body.user_id = req.userId;
+    req.body.user_id = req.userId;
 
     const OcurrenceCreate = await Ocurrence.create(req.body);
 
