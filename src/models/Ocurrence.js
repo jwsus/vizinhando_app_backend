@@ -52,7 +52,7 @@ const OcurrenceSchema = new Schema({
   longitude: {
     type: Number,
     required: true
-  },
+  }
 });
 
 export default model('Ocurrence', OcurrenceSchema);
