@@ -27,6 +27,8 @@ routes.get('/me', UserController.show);
 //occurence
 routes.post('/ocurrences', OcurrenceController.store);
 routes.get('/ocurrences', OcurrenceController.show);
+routes.get('/ocurrences/me', OcurrenceController.me);
+
 
 
 export default routes;

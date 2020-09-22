@@ -53,24 +53,6 @@ class PasswordController {
    
     return res.status(200).json();
   }
-
-  async update(req, res) {
-
-    const filter = { _id: req.userId};
-
-    var newPass = generator.generate({
-      length: 6,
-      numbers: true
-    });
-
-    const update = { password: newPass}
-
-    let doc = await User.findOneAndUpdate(filter, update, {
-      new: true
-    })
-
-    return;
-  }
 }
 
 export default new PasswordController;

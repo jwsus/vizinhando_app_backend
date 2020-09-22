@@ -53,34 +53,70 @@ class OcurrenceController {
   }
 
   async show(req, res) {
-    const ocurrence = await Ocurrence.find();
+    if (req.query.id) {
 
-    if (!ocurrence) {
-      return res.status(400).json();
+      try {
+
+        const ocurrence = await Ocurrence.find({_id: req.query.id});
+
+        if (!ocurrence) {
+          return res.status(200).json();
+        }
+
+        if (req.userId  !== ocurrence[0].user_id){
+          console.log(ocurrence[0].user_id);
+          console.log(req.userId);
+          return res.status(401).json();
+        }
+
+        return res.status(200).json(ocurrence);
+
+      } catch (error) {
+        return res.status(501).json();
+      }
     }
-
-    //convertendo model de ocorrencias para JSON 
-    // para remover e adicionar campos
-    const ocurrenceAux = JSON.stringify(ocurrence);
-    const ocurrenceJson = JSON.parse(ocurrenceAux);
-
-    for(var key in ocurrenceJson){
-      const { name } = await User.findOne({_id: ocurrence[key].user_id});
+    else {
+      const ocurrence = await Ocurrence.find();
+      if (!ocurrence) {
+        return res.status(400).json();
+      }
   
-      if (ocurrenceJson[key].anonymous == false) {
-        ocurrenceJson[key].user_name = name;
+      //convertendo model de ocorrencias para JSON 
+      // para remover e adicionar campos
+      const ocurrenceAux = JSON.stringify(ocurrence);
+      const ocurrenceJson = JSON.parse(ocurrenceAux);
+  
+      for(var key in ocurrenceJson){
+        const { name } = await User.findOne({_id: ocurrence[key].user_id});
+    
+        if (ocurrenceJson[key].anonymous == false) {
+          ocurrenceJson[key].user_name = name;
+        }
+  
+        if (ocurrenceJson[key].anonymous == true) {
+          delete ocurrenceJson[key].user_id;
+          delete ocurrenceJson[key].user_name;
+        }
+  
+        delete ocurrenceJson[key].__v;
+        ocurrenceJson[key].ocurred_at = Date.parse(ocurrenceJson[key].ocurred_at);
       }
+  
+      return res.status(200).json(ocurrenceJson);
+    };
 
-      if (ocurrenceJson[key].anonymous == true) {
-        delete ocurrenceJson[key].user_id;
-        delete ocurrenceJson[key].user_name;
-      }
+  };
 
-      delete ocurrenceJson[key].__v;
-      ocurrenceJson[key].ocurred_at = Date.parse(ocurrenceJson[key].ocurred_at);
+  //retorna todas as ocorrencias do usuário
+  async me(req, res) {
+    const ocurrence = await Ocurrence.find({user_id: req.userId });
+
+    if (ocurrence.length == 0) {
+      return res.status(404).json({message: 'nenhuma ocorrencia encontrada'})
     }
-
-    return res.status(200).json(ocurrenceJson);
+    console.log(ocurrence.length)
+  
+    return res.status(200).json(ocurrence);
   }
 }
 
