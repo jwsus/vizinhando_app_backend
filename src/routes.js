@@ -25,9 +25,11 @@ routes.get('/me', UserController.show);
 // routes.delete('/user/delete', UserController.delete);
 
 //occurence
+routes.get('/ocurrences/me', OcurrenceController.me);
 routes.post('/ocurrences', OcurrenceController.store);
 routes.get('/ocurrences', OcurrenceController.show);
-routes.get('/ocurrences/me', OcurrenceController.me);
+routes.get('/ocurrences/:id', OcurrenceController.show);
+routes.delete('/ocurrences/:id', OcurrenceController.delete);
 
 
 

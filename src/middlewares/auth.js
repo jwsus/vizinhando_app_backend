@@ -22,6 +22,7 @@ export default async (req, res, next) => {
     //ja que não será preciso informar o id posteriormente
     req.userId = decoded._id;
     req.userName = decoded.name;
+    req.role = decoded.role;
     
     return next();
 

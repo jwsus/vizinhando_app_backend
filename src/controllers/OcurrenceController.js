@@ -53,12 +53,12 @@ class OcurrenceController {
   }
 
   async show(req, res) {
-    if (req.query.id) {
-
+    // console.log(req.params.id)
+    if (req.params.id) {
+  
       try {
 
-        const ocurrence = await Ocurrence.find({_id: req.query.id});
-
+        const ocurrence = await Ocurrence.find({_id: req.params.id});
         if (!ocurrence) {
           return res.status(200).json();
         }
@@ -109,14 +109,43 @@ class OcurrenceController {
 
   //retorna todas as ocorrencias do usuário
   async me(req, res) {
+    console.log(req.userId)
     const ocurrence = await Ocurrence.find({user_id: req.userId });
 
     if (ocurrence.length == 0) {
       return res.status(404).json({message: 'nenhuma ocorrencia encontrada'})
     }
-    console.log(ocurrence.length)
   
     return res.status(200).json(ocurrence);
+  }
+
+  async delete(req, res) {
+    if (req.params.id) {
+
+      try {
+
+        const ocurrence = await Ocurrence.find({_id: req.params.id});
+        if (!ocurrence) {
+          return res.status(200).json();
+        }
+        if (req.role !== 'admin') {
+          if (req.userId  !== ocurrence[0].user_id){
+            return res.status(401).json();
+          }
+        }
+
+        const ocurrenceDelete = await Ocurrence.deleteOne({_id: req.params.id});
+        if(ocurrenceDelete.deletedCount > 0) {
+          return res.status(200).send();
+        }
+
+        return res.status(500).send({message: 'nenhuma ocorrencia encontrada com o id informado'});
+
+      } catch (err) {
+        return res.status(500).send(err)
+      }
+    }
+    return res.status(500).send({message: 'id nao informado'})
   }
 }
 
