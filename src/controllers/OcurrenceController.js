@@ -147,6 +147,21 @@ class OcurrenceController {
     }
     return res.status(500).send({message: 'id nao informado'})
   }
+
+  async update(req, res) {
+    const ocurrence = await Ocurrence.find({_id: req.params.id});
+
+    if (req.role !== 'admin') {
+      if (req.userId  !== ocurrence[0].user_id){
+        return res.status(401).json();
+      }
+    }
+    
+    await ocurrence[0].updateOne(req.body)
+    
+
+    return res.status(200).json();
+  }
 }
 
 export default new OcurrenceController;

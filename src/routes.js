@@ -30,6 +30,7 @@ routes.post('/ocurrences', OcurrenceController.store);
 routes.get('/ocurrences', OcurrenceController.show);
 routes.get('/ocurrences/:id', OcurrenceController.show);
 routes.delete('/ocurrences/:id', OcurrenceController.delete);
+routes.put('/ocurrences/:id', OcurrenceController.update);
 
 
 
