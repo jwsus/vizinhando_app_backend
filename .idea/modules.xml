@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../vizinhando_app2/.idea/vizinhando_app.iml" filepath="$PROJECT_DIR$/../vizinhando_app2/.idea/vizinhando_app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/vizinhando_app_backend.iml" filepath="$PROJECT_DIR$/.idea/vizinhando_app_backend.iml" />
+    </modules>
+  </component>
+</project>
