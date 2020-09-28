@@ -62,14 +62,13 @@ class OcurrenceController {
         if (!ocurrence) {
           return res.status(200).json();
         }
-
-        if (req.userId  !== ocurrence[0].user_id){
-          console.log(ocurrence[0].user_id);
-          console.log(req.userId);
-          return res.status(401).json();
+        if (req.role !== 'admin') {
+          if (req.userId  !== ocurrence[0].user_id){
+            return res.status(401).json();
+          }
         }
 
-        return res.status(200).json(ocurrence);
+        return res.status(200).json(ocurrence[0]);
 
       } catch (error) {
         return res.status(501).json();
@@ -114,8 +113,7 @@ class OcurrenceController {
     if (ocurrence.length == 0) {
       return res.status(200).json();
     }
-  
-    return res.status(200).json(ocurrence[0]);
+    return res.status(200).json(ocurrence);
   }
 
   async delete(req, res) {
@@ -183,9 +181,9 @@ class OcurrenceController {
     if(OcurrenceOk.anonymous == null){
       invalidSchema.push('anonymous');
     }
-    if(OcurrenceOk.user_id == '' || OcurrenceOk.user_id == null ){
-      invalidSchema.push('user_id');
-    }
+    // if(OcurrenceOk.user_id == '' || OcurrenceOk.user_id == null ){
+    //   invalidSchema.push('user_id');
+    // }
 
     if(invalidSchema.length > 0){
       return res.status(400).json({error: `Campos obrigatórios não preenchidos :${invalidSchema}`});
