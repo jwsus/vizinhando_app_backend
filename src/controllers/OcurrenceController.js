@@ -62,14 +62,13 @@ class OcurrenceController {
         if (!ocurrence) {
           return res.status(200).json();
         }
-
-        if (req.userId  !== ocurrence[0].user_id){
-          console.log(ocurrence[0].user_id);
-          console.log(req.userId);
-          return res.status(401).json();
+        if (req.role !== 'admin') {
+          if (req.userId  !== ocurrence[0].user_id){
+            return res.status(401).json();
+          }
         }
 
-        return res.status(200).json(ocurrence);
+        return res.status(200).json(ocurrence[0]);
 
       } catch (error) {
         return res.status(501).json();
@@ -109,13 +108,11 @@ class OcurrenceController {
 
   //retorna todas as ocorrencias do usuário
   async me(req, res) {
-    console.log(req.userId)
     const ocurrence = await Ocurrence.find({user_id: req.userId });
 
     if (ocurrence.length == 0) {
-      return res.status(404).json({message: 'nenhuma ocorrencia encontrada'})
+      return res.status(200).json();
     }
-  
     return res.status(200).json(ocurrence);
   }
 
@@ -146,6 +143,64 @@ class OcurrenceController {
       }
     }
     return res.status(500).send({message: 'id nao informado'})
+  }
+
+  async update(req, res) {
+
+    const OcurrenceOk = new Ocurrence(req.body);
+
+    const invalidSchema = new Array();
+
+    if(OcurrenceOk.description == '' || OcurrenceOk.description == null ){
+      invalidSchema.push('description');
+    }
+    if(OcurrenceOk.zip_code == '' || OcurrenceOk.zip_code == null ){
+      invalidSchema.push('zip_code');
+    }
+    if(OcurrenceOk.street == '' || OcurrenceOk.street == null ){
+      invalidSchema.push('street');
+    }
+    if(OcurrenceOk.neighborhood == '' || OcurrenceOk.neighborhood == null ){
+      invalidSchema.push('neighborhood');
+    }
+    if(OcurrenceOk.city == '' || OcurrenceOk.city == null ){
+      invalidSchema.push('city');
+    }
+    if(OcurrenceOk.type == '' || OcurrenceOk.type == null ){
+      invalidSchema.push('type');
+    }
+    if(OcurrenceOk.ocurred_at == '' || OcurrenceOk.ocurred_at == null ){
+      invalidSchema.push('ocurred_at');
+    }
+    if(OcurrenceOk.latitude == '' || OcurrenceOk.latitude == null ){
+      invalidSchema.push('latitude');
+    }
+    if(OcurrenceOk.longitude == '' || OcurrenceOk.longitude == null ){
+      invalidSchema.push('longitude');
+    }
+    if(OcurrenceOk.anonymous == null){
+      invalidSchema.push('anonymous');
+    }
+    // if(OcurrenceOk.user_id == '' || OcurrenceOk.user_id == null ){
+    //   invalidSchema.push('user_id');
+    // }
+
+    if(invalidSchema.length > 0){
+      return res.status(400).json({error: `Campos obrigatórios não preenchidos :${invalidSchema}`});
+    }
+
+    const ocurrence = await Ocurrence.find({_id: req.params.id});
+
+    if (req.role !== 'admin') {
+      if (req.userId  !== ocurrence[0].user_id){
+        return res.status(401).json();
+      }
+    }
+    
+    await ocurrence[0].updateOne(req.body)
+    
+
+    return res.status(200).json();
   }
 }
 
